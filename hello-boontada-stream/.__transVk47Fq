@@ -1,0 +1,157 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Mobile Meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="../static/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../static/css/styles.css">
+<link rel="stylesheet" href="../static/vendor/font-awesome/css/font-awesome.min.css">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<title>Hello Boontada-stream ! | Boontadata Blog</title>
+<script type="text/javascript">
+    var appInsights=window.appInsights||function(config){
+        function i(config){t[config]=function(){var i=arguments;t.queue.push(function(){t[config].apply(t,i)})}}var t={config:config},u=document,e=window,o="script",s="AuthenticatedUserContext",h="start",c="stop",l="Track",a=l+"Event",v=l+"Page",y=u.createElement(o),r,f;y.src=config.url||"https://az416426.vo.msecnd.net/scripts/a/ai.0.js";u.getElementsByTagName(o)[0].parentNode.appendChild(y);try{t.cookie=u.cookie}catch(p){}for(t.queue=[],t.version="1.0",r=["Event","Exception","Metric","PageView","Trace","Dependency"];r.length;)i("track"+r.pop());return i("set"+s),i("clear"+s),i(h+a),i(c+a),i(h+v),i(c+v),i("flush"),config.disableExceptionTracking||(r="onerror",i("_"+r),f=e[r],e[r]=function(config,i,u,e,o){var s=f&&f(config,i,u,e,o);return s!==!0&&t["_"+r](config,i,u,e,o),s}),t
+    }({
+        instrumentationKey: "5a6e3acc-4022-4ebf-b1d2-5fd0294c1e9d"
+    });
+
+    window.appInsights = appInsights;
+    appInsights.trackPageView();
+</script>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavBar">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+                <a id="boontadata_home_link" class="navbar-brand" href="../" hidden>BoontaData</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse"  id="myNavBar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="../">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="../about/">About</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <header class="intro-header" style="background-color : #4787DA">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="site-heading">
+                        <h1>Boontadata</h1>
+                        <hr class="small">
+                        <span class="subheading">Architectures de traitement de stream</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="social-media">
+            <div class="social-media-inner container text-center">
+                <ul class="list-inline">
+                    <li class="twitter-follow">
+                        <!--<a href="https://twitter.com/affinitech" class="twitter-follow-button" data-show-count="true" lang="fr">Follow @affinitech</a>-->
+                    </li><!--//twitter-follow-->
+                    <!--<li class="twitter-tweet">
+                        <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+                    </li>--><!--//twitter-tweet-->
+                    <li class="github-watch">
+                        <a class="github-button" href="https://github.com/boontadata/boontadata-streams" data-icon="octicon-eye" data-count-href="/boontadata/boontadata-streams/watchers" data-count-api="/repos/boontadata/boontadata-streams#subscribers_count" data-count-aria-label="# watchers on GitHub" aria-label="Watch boontadata/boontadata-streams on GitHub">Watch</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+  <div class="container">
+      <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+                
+  
+  <div class="post-preview">
+    
+      <h2 id="postToScroll" class="post-title">Hello Boontada-stream !</h2>
+    
+      <h3>L'architecture Lambda</h3>
+<p>Une architecture Bigdata classique a pour objet de consolider des données de toutes formes et origine, et de transformer celle-ci pour les exposer dans une base de donnée. Cette dernière quel que soit son type a pour vocation de permettre l'exposition des données soit par une API ou un outil de BI et de Dataviz. Ces architectures sont historiquement très orientée sur des traitements de type batch, avec par exemple un traitement quotidien d'un ensemble de fichiers reçus. Les transactions de la journée sont intégrée dans le datalake, pour être traitées, et synthétisées dans de jolis dashboards. Cette approche, si elle est très longtemps restée satisfaisante a très vite été challengée par la nécessité de disposer d'accélérer la vitesse de capture des données et de réduire la latence inhérente à leur mise à disposition dans une API ou tout autre dispositif. L'émergence de scénarios temps réels avec par exemple de l'IOT, ou même de la capture de tickets de caisse fait qu'il est devenu très compliqué de traiter avec un moteur unique du Batch et ce nouveau type de Flux. Des optimisations ont été tentée pour réduire la taille des fenêtres de batch, et tendre vers du temps réel, mais la réalité est que 2 types de moteurs ont commencé à co-exister pour résoudre cette équation. D'un coté un moteur batch et de l'autre un moteur de stream.</p>
+<p>L'architecture lambda :
+<img src="../static/img/lambda.jpg" alt="Architecture lambda" title="Archi lambda"></p>
+<p>C'est ainsi qu'est née l'architecture Lambda dont le nom provient du fait qu'une donnée lors de son arrivée est écrite dans deux directions distinctes. Elle a été présentée pour la première fois par Nathan Marz en 2013. A l'époque il était en charge de l'infrastructure data de Twitter et devait gérer à la fois le stockage de l'historique des twitts et l'exploitation à chaud de ceux-ci pour les trends notamment. Il a mis en avant dans ses publications les notions de "batch layer", de "speed layer" et de "serving layer".</p>
+<p>Très vite les architectures Lambda ont été couplées à un broker de message tel que Flume ou Kafka. Ce dernier a la faculté de pouvoir absorder tous les flux en temps réel, de les bufferiser, et de permettre à de multiple moteurs de les consommer. Afin de résister à une forte charge, Kafka présente une architecture partitionnée et distribuée.</p>
+<h3>Pourquoi la remettre en cause</h3>
+<p>L'architecture Lambda, si elle permet de satisfaire les objectifs de batch et de temps réel, a très vite été critiquée par la communauté. La complexité inhérente à l'ensemble des technologies mises en oeuvre, et le fait de devoir maintenir deux bases de code a été réellement un handicap. La séparation des moteurs entre batch et streaming amène des divergences de résultat plus ou moins évidentes. Les tentatives de mise en oeuvre d'outils d'abstraction pour avoir une base de code ont été jugées trop impactantes sur les performances et les fonctionnalités des différents moteurs utilisés.</p>
+<p>Spark a dès sa conception initiale tenté de résoudre ce problème en offrant une capacité de traitement batch (spark core) et micro-batch (spark streaming). Si la base de code est assez commune, il y a quand même deux moteurs de traitement à maintenir, ce qui est loin d'être idéal. Imaginons que nous avons un flux de donnée sur lequel est calculé 3 indicateurs en temps réel, et que nous souhaitions en ajouter un quatrième. Il va falloir implémenter ce nouvel indicateur sur le flux "streaming", mais aussi sur le moteur "batch" afin de mettre à jour l'historique.</p>
+<h3>L'architecture  non lambda</h3>
+<p>Les ingénieurs de Linkedin se sont très tôt intéressés aux problématiques que nous venons d'aborder. Leur conclusion a été sans appel, la solution était de considérer toutes les données comme un stream, en rendant celui-ci persistant. Le fait de prendre un stream et de le stocker sous forme de log est le fondement même de Kafka. Kafka au delà de ses capacités de message broker permet de stocker l'historique du stream et de le re-dérouler autant que nécessaire. Une seule et unique source de données est utilisable pour les traitements "stream" et les traitements "batch".  Au final, on peut considérer que le batch n'est qu'un cas particulier de stream.</p>
+<p>L'architecture non lambda :
+<img src="../static/img/nonlambda.jpg" alt="Architecture non lambda" title="Archi non lambda"></p>
+<h3>Les challenges du streaming</h3>
+<p>Faire des opérations de comptage simple sur les streams qui traversent le broker de message est en théorie très simple. Le traitement de ce type de donnée se fait majoritairement en appliquant des fenêtres sur le flux d'évènements. Par exemple à t = 20 secondes, on va traiter les données qui sont arrivées entre la 15ème et la 20ème seconde. Différents types de fenêtres sont possibles, elle peuvent être fixes, ou glissantes, dans ce dernier cas, toutes les 5 secondes, on traite une accumulation sur 15 secondes. Dans la réalité le broker est distribué et va donc induire des latences dans la propagation des messages. Des coupures réseau peuvent induire la perte de certains messages, ou de traitements en double. On peut parfaitement avoir des évènements qui apparaissent à la 17ème seconde mais qui aient été produits à t=7. C'est sur ce dernier point que repose l'un des gros challenges des traitements de streams, que nous allons essayer d'adresser ici.</p>
+<h3>Le projet Boontadata-Streams</h3>
+<p>Le projet Boontadata-streams est un jeu de composant qui permet de simuler une architecture de streaming et de pouvoir monter très rapidement un lab pour les tester. Cette approche permet de dérouler un ou plusieurs use-cases sur différents types d'architecture et de tester celles-ci. L'architecture de la plateforme basée sur Docker permet d'activer très vite les différents moteurs pour exécuter les scénarios de test.</p>
+<p>On a un générateur de données,  une base Cassandra, un Cluster Kafka, plusieurs moteurs de traitements de stream (Spark, Flink, Storm...), et pour finir un comparateur de résultat. Le générateur va créer un flux de messages de type IOT, et les insérer dans un topic Kafka. Le générateur va aussi réaliser des comptages sur des fenêtres de temps, et insérer ceux-ci dans une base Cassandra afin de disposer d'une version de la vérité. De plus, le générateur a un comportement tout à fait reproductible, et permet de comparer les résultats obtenus lors d'exécutions avec des moteurs différents.</p>
+<p><img src="../static/img/boontadata.png" alt="Architecture Boontadata" title="Boontadata"></p>
+<p>C'est un projet vivant, qui n'attend que vos contributions, twittez <a href="https://twitter.com/boontadata">@boontadata</a> ou allez sur le <a href="https://github.com/boontadata/boontadata-streams">Github</a>. Cette série de blog va entrer plus dans le détail de l'utilisation du projet, et va vous permettre de découvrir les spécificités des différents use-cases implémentés.</p>
+
+      <p class="post-meta">
+          <br>
+          Écrit par
+          
+         <a href="https://twitter.com/vhe74">
+              Vincent Heuschling
+          </a>
+          
+          le 2017-03-29
+          
+<!--            <span class="post-share"><a href="https://twitter.com/share" class="twitter-share-button" lang="fr" data-text="Hello Boontada-stream !" data-url="">Tweet</a></span>
+-->       
+      </p>
+  </div>
+<hr>
+
+
+  <div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/hello-boontada-stream"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//boontadatablog.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+          </div>
+      </div>
+  </div>
+  <footer>
+      <div class="container text-center">
+          <a href="http://www.affini-tech.com/" target="_blank">&copy; By Affini-Tech</a>
+      </div>
+  </footer>
+  <script type="text/javascript" src="../static/vendor/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="../static/vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../static/js/main.js"></script>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  <script src="https://buttons.github.io/buttons.js"></script>
+  <img src="http://tracker.affini-tech.net/pixel.gif"/>
+</body>
