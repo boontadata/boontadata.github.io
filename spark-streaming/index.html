@@ -1,0 +1,232 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Mobile Meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="../static/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../static/css/styles.css">
+<link rel="stylesheet" href="../static/vendor/font-awesome/css/font-awesome.min.css">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<title>Spark Streaming | Boontadata Blog</title>
+<script type="text/javascript">
+    var appInsights=window.appInsights||function(config){
+        function i(config){t[config]=function(){var i=arguments;t.queue.push(function(){t[config].apply(t,i)})}}var t={config:config},u=document,e=window,o="script",s="AuthenticatedUserContext",h="start",c="stop",l="Track",a=l+"Event",v=l+"Page",y=u.createElement(o),r,f;y.src=config.url||"https://az416426.vo.msecnd.net/scripts/a/ai.0.js";u.getElementsByTagName(o)[0].parentNode.appendChild(y);try{t.cookie=u.cookie}catch(p){}for(t.queue=[],t.version="1.0",r=["Event","Exception","Metric","PageView","Trace","Dependency"];r.length;)i("track"+r.pop());return i("set"+s),i("clear"+s),i(h+a),i(c+a),i(h+v),i(c+v),i("flush"),config.disableExceptionTracking||(r="onerror",i("_"+r),f=e[r],e[r]=function(config,i,u,e,o){var s=f&&f(config,i,u,e,o);return s!==!0&&t["_"+r](config,i,u,e,o),s}),t
+    }({
+        instrumentationKey: "5a6e3acc-4022-4ebf-b1d2-5fd0294c1e9d"
+    });
+
+    window.appInsights = appInsights;
+    appInsights.trackPageView();
+</script>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavBar">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+                <a id="boontadata_home_link" class="navbar-brand" href="../" hidden>BoontaData</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse"  id="myNavBar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="../">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="../about/">About</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <header class="intro-header" style="background-color : #4787DA">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="site-heading">
+                        <h1>Boontadata</h1>
+                        <hr class="small">
+                        <span class="subheading">Architectures de traitement de stream</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="social-media">
+            <div class="social-media-inner container text-center">
+                <ul class="list-inline">
+                    <!---
+                    <li class="twitter-follow">
+                        <a class="github-button" href="https://github.com/boontadata" aria-label="Follow @boontadata on GitHub">Follow @boontadata</a>
+                    </li>--><!--//twitter-follow-->
+                    <li class="github-watch">
+                        <a class="github-button" href="https://github.com/boontadata/boontadata-streams" data-icon="octicon-eye" data-count-href="/boontadata/boontadata-streams/watchers" data-count-api="/repos/boontadata/boontadata-streams#subscribers_count" data-count-aria-label="# watchers on GitHub" aria-label="Watch boontadata/boontadata-streams on GitHub">Watch</a>
+                    </li>
+                    <li class="twitter-tweet">
+                        <a href="https://twitter.com/boontadata" class="twitter-follow-button" data-show-count="false">Follow @boontadata</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </li><!--//twitter-tweet-->
+                </ul>
+            </div>
+        </div>
+    </header>
+  <div class="container">
+      <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+                
+  
+  <div class="post-preview">
+    
+      <h2 id="postToScroll" class="post-title">Spark Streaming</h2>
+    
+      <p>Dans ce blog post, nous allons vous montrer l'étude de Boontadata au travers d'un moteur de traitement: Spark Streaming. 
+Cette extension de l’API Spark permet de mettre en place des processus de traitements répondant à des problématiques de vitesse, tolérance à la panne, scalabilité lorsqu’il s’agit de données provenant d’un flux (ces données peuvent venir de sources diverses telles que Flume, Kafka).
+<img src="../static/img/spark-streaming/spark-streaming-1.png" alt="spark-streaming-1"></p>
+<p>Concrètement, Spark Streaming reçoit la donnée en stream, qu’il divise ensuite en micro-batches (selon un intervalle de temps défini). 
+Ceux-ci sont ensuite gérés par le moteur Spark qui permet le traitement des données sur une fenêtre de temps.
+<img src="../static/img/spark-streaming/spark-streaming-2.png" alt="spark-streaming-2"></p>
+<p>L'architecture mise en place repose sur la plateforme générique boontadata constituée des éléments :</p>
+<ul>
+<li>Simulateur IOT permettant de créer des flux de messages</li>
+<li>Système de messagerie distribué Kafka basé sur le principe du "publisher" / "Subscriber"</li>
+<li>Base donnée Cassandra pour le stockage des données et résultats</li>
+<li>Service de traitement des flux : Spark Streaming dans le cas de ce blog post</li>
+<li>Module de comparaison pour évaluer l'impact et la performance du module de traitement</li>
+</ul>
+<p>Tous les éléments de la plateforme boontada sont créés dans des containers distincts de manière à apporter un maximum de flexibilité.</p>
+<p><img src="../static/img/spark-streaming/spark-streaming-3.png" alt="spark-streaming-3"></p>
+<p>Le schéma ci-dessus représente le workflow de notre plateforme.<br>
+Les données proviennent d’un IOT et sont envoyées dans un broker Kafka. Les données sources sont également aggrégées sur une fenêtre de temps par la simulateur IOT et sauvegardées dans la base Cassandra pour servir de référence.<br>
+La brique Kafka sert de source de données à Spark Streaming qui représente le service de traitement à évaluer.<br>
+Spark Streaming procède au traitement des données (aggrégation) sur des micro-batches et stocke les résultats dans la base de données cassandra.<br>
+Le module de comparaison récupère les résultats dans Cassandra et permet d'évaluer les latences induites par le traitement Spark Streaming.</p>
+<p>Afin de connaître la procédure d’installation, n’hésitez pas à aller sur le lien <a href="https://github.com/boontadata/boontadata-streams/blob/master/doc/procedure_install_running_scenarios.md">suivant</a>.</p>
+<p>L'architecture de boontadata a été conçue de manière à permettre de tester très rapidement, et avec un minimum de changements, différents moteurs de traitement des flux de données. Dans cette optique, seul le container contenant le moteur de traitement à tester et le code correspondant sont à recréer pour tester un nouveau scénario. C'est cette partie que nous allons détailler dans la paragraphe suivant pour la mise en place du scénario spark streaming.</p>
+<hr>
+<h2>Construction du conteneur spark</h2>
+<h3>Environnement de déploiement</h3>
+<p>Afin de s'affranchir de tout IDE, la création des jars qui seront exécutés par le moteur de traitement sera réalisée dans un container docker contenant les outils nécessaires à la création de jars java et scala.</p>
+<script src="https://gist.github.com/BastienBP/aa18314e0237d727abe51656338d7baa.js"></script>
+
+<h3>Code</h3>
+
+C’est ce code qui sera compilé et assemblé en jar pour exécution, il dépend du fichier build.sbt contenant toutes les dépendances spark-streaming et les librairies nécessaires à l’association de services voisins (kafka).<br>
+Pour Spark Streaming, le code est écrit en scala (StreamingJob.scala). Les principaux éléments du code sont les suivants :
+<ul>
+<li> Définition d'un streamingContext prenant en compte le nombre de secondes correspondant à notre fenêtre de temps de référence (dans notre exemple 5s) </li>
+<li> Lecture du flux de messages depuis le topic Kafka, la donnée est alors stockée sous forme de micro-batches par spark </li>
+<li> Reconstitution des évènements de l'IOT par agrégation des messages selon leurs DeviceId et Category pour chaque micro-batche </li>
+<li> Sauvegarde des résultats dans Cassandra pour comparaison avec le traitement initial </li>
+</ul>
+<script src="https://gist.github.com/BastienBP/98d1708e63300d38cdad084c13403398.js"></script><h3>JAR  et image docker</h3><p>La fonction <strong>build_and_push</strong> du script <strong>buildimages.sh</strong> permet de créer le jar, l'image docker associée et de pousser cette dernière dans un registry docker.</p>
+<ul>
+<li>La compilation du jar est réalisée via l'outil sbt (répertoire <em>$BOONTADATA_HOME/code/spark/master/code</em>, commande <code>sbt clean assembly</code>)  </li>
+</ul>
+<script src="https://gist.github.com/BastienBP/a0801dfad96104b5bae33f0feaf18bbd.js"></script>
+<ul>
+<li>Le jar est intégré via le Dockerfile du <b>sparkmaster</b> et les images (<b>sparkmaster</b> + <b>sparkworker</b>) sont construites avec la commande <code>docker build</code></li>  
+</ul>
+<script src="https://gist.github.com/BastienBP/c40c29d5e8ed619634b4db6f3cf9a879.js"></script><ul>
+<li>Les images sont uploadées sur le registry docker via <code>docker push</code>  </li>
+</ul>
+<p>Note : toutes les images docker correspondantes aux autres éléments génériques de l'infrastructure boontadata sont également construits à l'aide du script <strong>build_and_push.sh</strong></p>
+<pre><code>build_and_push $BOONTADATA_HOME/code/pyclientbase
+build_and_push $BOONTADATA_HOME/code/pyclient
+build_and_push $BOONTADATA_HOME/code/cassandra/base
+build_and_push $BOONTADATA_HOME/code/cassandra/init
+build_and_push $BOONTADATA_HOME/code/kafka-docker
+build_and_push $BOONTADATA_HOME/code/spark/base
+build_and_push $BOONTADATA_HOME/code/spark/worker
+build_and_push $BOONTADATA_HOME/code/zookeeper
+</code></pre>
+<hr>
+<h2>Exécution du scénario Spark Streaming</h2>
+<p>Le réalisation des tests se fait en 2 étapes :</p>
+<ul>
+<li>Lancements des tous les containers constituant l'architecture boontadata : <code>. startscenario.sh spark</code></li>
+<li>Exécution des scripts au sein de ces containers : <code>. runscenario.sh spark1</code></li>
+</ul>
+<h3>Création des containers</h3>
+<p>Les containers sont créés via la commande <code>docker compose up</code><br>
+Le fichier <strong>docker-compose.yml</strong> est constitué de 3 parties qui sont concaténées :</p>
+<ul>
+<li>une base commune à tous les scénarios (composants communs de l'infrastructure) <strong>common-start.yml</strong></li>
+<li>un module spécifique au scénario spark streaming (création d'un container sparkmaster et de 2 containers sparkworker) <strong>spark.yml</strong></li>
+<li>une base commune pour définir les paramètres réseau <strong>common-end.yml</strong>
+<img src="../static/img/spark-streaming/spark-streaming-4.png" alt="spark-streaming-4"></li>
+</ul>
+<h3>Lancement des tests</h3>
+<p>Le script <strong>runscenario.sh</strong> fait appel à la fonction <strong>scenario_spark</strong> qui permet de déclencher tout le workflow</p>
+<p><script src="https://gist.github.com/BastienBP/3395db6dbc5ab0b55aa1a1d02f949946.js"></script></p>
+<hr>
+<h2>Résultats</h2>
+<p>L'analyse des résultats permet de comparer les valeurs d'agrégation (sur la fenêtre de temps de 5s) réalisées en début de workflow par le simulateur IOT avec celles calculées par le moteur spark streaming</p>
+<p>Exemple de résultats :</p>
+<pre><code>Comparing ingest device and downstream for m1_sum
+10 exceptions out of 21
+
+Exceptions are:
+    window_time            device_id      category   m1_sum_ingest_devicetime  m1_sum_downstream delta_m1_sum_ingestdevice_downstream          
+1   2017-01-03 17:52:15  84cbc110-f4d0-4bb1-9530-bff92770c382    cat-1    851  884.0 -33.0
+2   2017-01-03 17:52:20  84cbc110-f4d0-4bb1-9530-bff92770c382    cat-1    656  726.0  -70.0
+6   2017-01-03 17:52:15  84cbc110-f4d0-4bb1-9530-bff92770c382    cat-2    1137 1156.0 -19.0
+7   2017-01-03 17:52:20  84cbc110-f4d0-4bb1-9530-bff92770c382    cat-2    674  709.0  -35.0
+9   2017-01-03 17:52:30  84cbc110-f4d0-4bb1-9530-bff92770c382    cat-2    488  536.0  -48.0
+13  2017-01-03 17:52:25  84cbc110-f4d0-4bb1-9530-bff92770c382    cat-3   519  618.0   -99.0
+15  2017-01-03 17:50:05  84cbc110-f4d0-4bb1-9530-bff92770c382    cat-4    49  NaN    NaN
+17  2017-01-03 17:52:15  84cbc110-f4d0-4bb1-9530-bff92770c382    cat-4  1062   1149.0 -87.0
+18  2017-01-03 17:52:20  84cbc110-f4d0-4bb1-9530-bff92770c382    cat-4  1519  1605.0  -86.0
+19  2017-01-03 17:52:25  84cbc110-f4d0-4bb1-9530-bff92770c382    cat-4  940  1071.0  -131.0
+</code></pre>
+
+      <p class="post-meta">
+          <br>
+          Écrit par
+          
+          Gilles ESSOKI
+          
+          le 2017-04-18
+          
+<!--            <span class="post-share"><a href="https://twitter.com/share" class="twitter-share-button" lang="fr" data-text="Spark Streaming" data-url="">Tweet</a></span>
+-->       
+      </p>
+  </div>
+<hr>
+
+
+  <div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/spark-streaming"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//boontadatablog.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+          </div>
+      </div>
+  </div>
+  <footer>
+  </footer>
+  <script type="text/javascript" src="../static/vendor/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="../static/vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../static/js/main.js"></script>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  <script src="https://buttons.github.io/buttons.js"></script>
+  <img src="http://tracker.affini-tech.net/pixel.gif"/>
+</body>
