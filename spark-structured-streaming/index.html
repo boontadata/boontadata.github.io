@@ -1,0 +1,209 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Mobile Meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="../static/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../static/css/styles.css">
+<link rel="stylesheet" href="../static/vendor/font-awesome/css/font-awesome.min.css">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<title>Spark Structured Streaming | Boontadata Blog</title>
+<script type="text/javascript">
+    var appInsights=window.appInsights||function(config){
+        function i(config){t[config]=function(){var i=arguments;t.queue.push(function(){t[config].apply(t,i)})}}var t={config:config},u=document,e=window,o="script",s="AuthenticatedUserContext",h="start",c="stop",l="Track",a=l+"Event",v=l+"Page",y=u.createElement(o),r,f;y.src=config.url||"https://az416426.vo.msecnd.net/scripts/a/ai.0.js";u.getElementsByTagName(o)[0].parentNode.appendChild(y);try{t.cookie=u.cookie}catch(p){}for(t.queue=[],t.version="1.0",r=["Event","Exception","Metric","PageView","Trace","Dependency"];r.length;)i("track"+r.pop());return i("set"+s),i("clear"+s),i(h+a),i(c+a),i(h+v),i(c+v),i("flush"),config.disableExceptionTracking||(r="onerror",i("_"+r),f=e[r],e[r]=function(config,i,u,e,o){var s=f&&f(config,i,u,e,o);return s!==!0&&t["_"+r](config,i,u,e,o),s}),t
+    }({
+        instrumentationKey: "5a6e3acc-4022-4ebf-b1d2-5fd0294c1e9d"
+    });
+
+    window.appInsights = appInsights;
+    appInsights.trackPageView();
+</script>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavBar">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+                <a id="boontadata_home_link" class="navbar-brand" href="../" hidden>BoontaData</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse"  id="myNavBar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="../">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="../about/">About</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <header class="intro-header" style="background-color : #4787DA">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="site-heading">
+                        <h1>Boontadata</h1>
+                        <hr class="small">
+                        <span class="subheading">Architectures de traitement de stream</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="social-media">
+            <div class="social-media-inner container text-center">
+                <ul class="list-inline">
+                    <!---
+                    <li class="twitter-follow">
+                        <a class="github-button" href="https://github.com/boontadata" aria-label="Follow @boontadata on GitHub">Follow @boontadata</a>
+                    </li>--><!--//twitter-follow-->
+                    <li class="github-watch">
+                        <a class="github-button" href="https://github.com/boontadata/boontadata-streams" data-icon="octicon-eye" data-count-href="/boontadata/boontadata-streams/watchers" data-count-api="/repos/boontadata/boontadata-streams#subscribers_count" data-count-aria-label="# watchers on GitHub" aria-label="Watch boontadata/boontadata-streams on GitHub">Watch</a>
+                    </li>
+                    <li class="twitter-tweet">
+                        <a href="https://twitter.com/boontadata" class="twitter-follow-button" data-show-count="false">Follow @boontadata</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </li><!--//twitter-tweet-->
+                </ul>
+            </div>
+        </div>
+    </header>
+  <div class="container">
+      <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+                
+  
+  <div class="post-preview">
+    
+      <h2 id="postToScroll" class="post-title">Spark Structured Streaming</h2>
+    
+      <p>Dans ce blogpost, nous allons développer notre étude autour d’un moteur de traitement streaming récent: Spark Structured Streaming.
+Scalable, tolérant aux pannes, à l’instar de Spark streaming, il se base sur le moteur Spark SQL et permet ainsi la construction d’applications.</p>
+<h3>Principe de fonctionnement</h3>
+<p>Concrètement, structured streaming permet à l'utilisateur de traiter la donnée comme s'il s'agissait d'une table qui se remplissait perpétuellement:  chaque nouvelle occurence dans le stream pourrait se traduire par l'ajout d'une nouvelle ligne dans la table. 
+Spark traite la donnée ici de manière innovante, même si cela peut s'apparenter à un modèle de process batch conventionnel.</p>
+<p><img src="../static/img/sstream/sstream-3.png" alt="spark-structured-streaming-3"></p>
+<p>L'utilisateur peut ensuite réaliser une requête sur cette <em>input table afin</em> de générer une <em>output table</em>.
+Il s'agit ici d'une incrémentialisation: on est face à un phénomène de transformation des pseudos micros batchs en exécution de stream:</p>
+<ul>
+<li>L'utilisateur défini un déclencheur (trigger) qui déterminera l'intervalle de temps sur lequel de nouvelles lignes s'insèreront sur l'<em>input table</em> et donc, définira les mises à jour de l'<em>output table</em>. </li>
+<li>En effet, à chaque déclenchement de trigger, spark vérifie la présence ou non de données (si de nouvelles lignes sont apparus dans l'<em>input table</em>), puis l'incrémente dans notre <em>output table</em>. </li>
+</ul>
+<p><img src="../static/img/sstream/sstream-4.png" alt="spark-structured-streaming-4"></p>
+<p>Le schéma ci dessus se termine par l'apparition de la notion de <strong>mode d'output</strong>. Ce mode détermine tout simplement le type d'écriture qui s'effectuera dans notre stockage externe (dans notre cas, cassandra). Il existe 3 modes:</p>
+<ul>
+<li>Append: seul les dernières lignes apparaissant dans notre <em>output table</em> depuis le dernier trigger s'écriront dans notre stockage</li>
+<li>Complete: l'ensemble de l'<em>output table</em> sera écrit dans notre solution de stockage</li>
+<li>Update: seul les lignes qui seront modifiées dans notre <em>output table</em> depuis le dernier trigger, seront changées dans notre solution de stockage. (<strong> Non disponible en spark 2.0</strong>)</li>
+</ul>
+<p>Exemple avec le mode Update:</p>
+<p><img src="../static/img/sstream/sstream-5.png" alt="spark-structured-streaming-5"></p>
+<h3>Gestion d'Event-Time et du retard de la donnée:</h3>
+<p>L'event time correspond à une date inclue dans la donnée elle même, ce qui peut être utile pour certaines applications. À des fins de précision, travailler sur une date correspondant au moment de la création de la donnée plutôt qu'au moment de son arrivée dans Spark est beaucoup plus judicieux. 
+Spark structured streaming permet de travailler sur cet "event-time" (présence d'une colonne event-time dans chaque ligne  de chaque évènement)  et ce qui permet de réaliser des agrégations sur cette fenêtre de temps (chaque fenêtre de temps étant un groupe et chaque ligne peut appartenir à un ou plusieurs groupes...</p>
+<p>La gestion du retard de la donnée est elle aussi gérée automatiquement par ce modèle. Depuis que Spark gère la gestion de la mise à jour des output tables, il peut gérer les anciennes agrégations lorsqu'il s'agit de données en retard, tout comme il peut mettre à jour proprement des anciennes agrégations.</p>
+<h3>Tolérance aux pannes:</h3>
+<p>Spark structured stream a été pensé de manière à pouvoir garder des résultats valides, en cas de panne de machine, en redémarrant  et/ ou reprocessant la donnée:</p>
+<ul>
+<li>Chaque source streaming est supposée disposer d'un système d'offsets, (comme Kafka) lui permettant de savoir la position du message dans le stream. </li>
+<li>Spark se base ainsi sur ce principe en écrivant des logs. Ces logs correspondent à l'intervalle d'offsets de la data processée dans chaque trigger. </li>
+<li>Le flux de sorti est réalisé de sorte à ce qu'il soit idempotent ( une opération a le même effet qu'on l'applique une ou plusieurs fois) et ce, pour permettre de processer la donnée à nouveau. </li>
+</ul>
+<h3>Structured Spark Streaming dans Boontadata:</h3>
+<p>À travers ce blog, nous allons:</p>
+<ul>
+<li>décrire notre intégration end-to-end avec Kafka, consumer les messages depuis ce dernier</li>
+<li>utiliser les propriétés de Spark Structured Streaming afin de créer un streaming dataset</li>
+<li>insérer ces données dans une base de données cassandra.</li>
+</ul>
+<p><img src="../static/img/sstream/sstream-1.png" alt="spark-structured-streaming-1"></p>
+<p><em>Nous pourrons noter le fait que Spark Structured Streaming est toujours en phase “Alpha” de développement, tout comme les API permettant son utilisation.</em></p>
+<p>L'architecture utilisée à travers ce blogpost repose également sur notre plateforme générique boontadata.
+Elle est constituée des éléments :</p>
+<ul>
+<li>Simulateur IOT permettant de créer des flux de messages</li>
+<li>Système de messagerie distribué Kafka basé sur le principe du "publisher" / "Subscriber"</li>
+<li>Base donnée Cassandra pour le stockage des données et résultats</li>
+<li>Service de traitement des flux : Spark Streaming dans le cas de ce blog post</li>
+<li>Module de comparaison pour évaluer l'impact et la performance du module de traitement</li>
+</ul>
+<p>Tous les éléments de la plateforme boontada sont créés dans des containers distincts de manière à apporter un maximum de flexibilité.</p>
+<p><img src="../static/img/sstream/sstream-2.png" alt="spark-structured-streaming-2"></p>
+<p>Le schéma ci-dessus représente le workflow de notre plateforme.
+Les données proviennent d’un IOT et sont envoyées dans un broker Kafka. Les données sources sont également agrégées sur une fenêtre de temps par la simulateur IOT et sauvegardées dans la base Cassandra pour servir de référence.
+La brique Kafka sert de source de données à Spark Structured Streaming qui représente le service de traitement à évaluer.
+Spark Structured Streaming procède au traitement des streams par création de datasets.
+Ces datasets sont ensuite stockés dans la base de données cassandra.
+Le module de comparaison récupère les résultats dans Cassandra et permet d'évaluer les latences induites par le traitement Spark Streaming.</p>
+<p>Afin de connaître la procédure d’installation, n’hésitez pas à aller sur le lien <a href="https://github.com/boontadata/boontadata-streams/blob/master/doc/procedure_install_running_scenarios.md">suivant</a>.</p>
+<p>Ayant déjà traité le fonctionnement de notre environnement et architecture boontadata dans un blog précédent (lien vers spark streaming),   nous détaillerons ici le code correspondant au nouveau scénario Spark structured Streaming.</p>
+<hr>
+<h2>Code:</h2>
+<h3>SparkSession et récupération des messages Kafka</h3><p>Pour Spark Structured Streaming, le code est écrit en scala (SStreamingJob.scala). Les principaux éléments du code sont les suivants :</p>
+<ul>
+<li> Définition d'une configuration "sparkConf" prenant en compte le nom de notre application et la connexion à la base de données Cassadandra</li>
+<script src="https://gist.github.com/BastienBP/7e707482cffb4a5fec9fc27f54ca4fb7.js"></script>
+<li> Lancement d'une nouvelle session spark </li>
+<li> Lecture en streaming des messages provenant des brokers Kafka.  On y renseigne l'adresse des brokers, le topic, le type de lecture, ici "latest", permettant de récupérer les dernier messages du topic </li>
+<script src="https://gist.github.com/BastienBP/5d9dfc2dc496f3199e8465a482e6cdd4.js"></script>
+</ul><p><h3>Création du dataset</h3></p>
+<ul>
+<li> On récupère ensuite les champs "value" et "timestamp" des messages (que l'on caste au format String).
+On définit une colonne "cols", liste des éléments que l'on veut récupérer de "value".
+On réalise ensuite un dataset, issu de la séparation par "|" de chaque ligne.  </li>
+<script src="https://gist.github.com/BastienBP/fea5dba294b89a2d9ff3a7f341f20030.js"></script>
+</ul><hr>
+
+      <p class="post-meta">
+          <br>
+          Écrit par
+          
+          Gilles ESSOKI
+          
+          le 2017-04-25
+          
+<!--            <span class="post-share"><a href="https://twitter.com/share" class="twitter-share-button" lang="fr" data-text="Spark Structured Streaming" data-url="">Tweet</a></span>
+-->       
+      </p>
+  </div>
+<hr>
+
+
+  <div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/spark-structured-streaming"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//boontadatablog.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+          </div>
+      </div>
+  </div>
+  <footer>
+  </footer>
+  <script type="text/javascript" src="../static/vendor/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="../static/vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../static/js/main.js"></script>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  <script src="https://buttons.github.io/buttons.js"></script>
+  <img src="http://tracker.affini-tech.net/pixel.gif"/>
+</body>
