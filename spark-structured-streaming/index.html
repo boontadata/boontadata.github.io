@@ -143,8 +143,14 @@ Spark permet ainsi de traiter des flux de données en utilisant la même API que
 <script src="https://gist.github.com/BastienBP/7e707482cffb4a5fec9fc27f54ca4fb7.js"></script>
 <li> Lecture en streaming des messages provenant des brokers Kafka.  On y renseigne l'adresse des brokers, le topic, le type de lecture, ici "latest", permettant de récupérer les dernier messages du topic </li>
 <script src="https://gist.github.com/BastienBP/5d9dfc2dc496f3199e8465a482e6cdd4.js"></script>
-
-<h3>Création du dataset</h3>
+</ul><p><h3>Création du dataset</h3>
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
+<ul>
+<li> On récupère ensuite les champs "value" et "timestamp" des messages (que l'on caste au format String).
+On définit une colonne "cols", liste des éléments que l'on veut récupérer de "value".
+On réalise ensuite un dataset, issu de la séparation par "|" de chaque ligne.  </li>
+<script src="https://gist.github.com/BastienBP/fea5dba294b89a2d9ff3a7f341f20030.js"></script>
+=======
 <li> Extraction des informations du message : définition des colonnes formant le dataset </li>
 <li> Application de la logique business  : somme des mesures sur la fenêtre de temps</li>
 <i> Il faut noter que la déduplication des messages n'est pas réalisée en raison d'une limitation du moteur spark structured streaming.  
@@ -159,6 +165,7 @@ Pour palier à ce problème, il aurait fallu envoyer le résultat de la dédupli
 <li> Ecriture dans Cassandra : utilisation du Foreach writer </li>
 <i> L'output mode a été fixé en "complete" : seul mode adapté dans notre cas (le mode append ne peut être utilisé car les lignes agrégées doivent être modifiées au fur et à mesure de l'arrivée des messages et le mode update n'est pas disponible). Ce mode pourrait poser des problèmes de performances si la taille de la table de sortie devient trop importante.</i>
 <script src="https://gist.github.com/lololc/ac9c0a4f75c305e96d201c5e9700e293.js"></script>
+>>>>>>> draft-flink
 </ul><p>Il pourrait être intéressant de compléter l'étude en faisant varier l'intervalle de déclenchement du trigger. Par défaut, le trigger se déclenche dès que les traitements sont terminés mais l'on peut spécifier une valeur de temps :</p>
 <pre><code>// Exemple de déclenchement du trigger toutes les 10 secondes
 ds.writeStream.queryName("aggregateStructuredStream")

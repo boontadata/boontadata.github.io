@@ -1,0 +1,234 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Mobile Meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="../static/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../static/css/styles.css">
+<link rel="stylesheet" href="../static/vendor/font-awesome/css/font-awesome.min.css">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<title>Flink | Boontadata Blog</title>
+<script type="text/javascript">
+    var appInsights=window.appInsights||function(config){
+        function i(config){t[config]=function(){var i=arguments;t.queue.push(function(){t[config].apply(t,i)})}}var t={config:config},u=document,e=window,o="script",s="AuthenticatedUserContext",h="start",c="stop",l="Track",a=l+"Event",v=l+"Page",y=u.createElement(o),r,f;y.src=config.url||"https://az416426.vo.msecnd.net/scripts/a/ai.0.js";u.getElementsByTagName(o)[0].parentNode.appendChild(y);try{t.cookie=u.cookie}catch(p){}for(t.queue=[],t.version="1.0",r=["Event","Exception","Metric","PageView","Trace","Dependency"];r.length;)i("track"+r.pop());return i("set"+s),i("clear"+s),i(h+a),i(c+a),i(h+v),i(c+v),i("flush"),config.disableExceptionTracking||(r="onerror",i("_"+r),f=e[r],e[r]=function(config,i,u,e,o){var s=f&&f(config,i,u,e,o);return s!==!0&&t["_"+r](config,i,u,e,o),s}),t
+    }({
+        instrumentationKey: "5a6e3acc-4022-4ebf-b1d2-5fd0294c1e9d"
+    });
+
+    window.appInsights = appInsights;
+    appInsights.trackPageView();
+</script>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavBar">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+                <a id="boontadata_home_link" class="navbar-brand" href="../" hidden>BoontaData</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse"  id="myNavBar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="../">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="../about/">About</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <header class="intro-header" style="background-color : #4787DA">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="site-heading">
+                        <h1>Boontadata</h1>
+                        <hr class="small">
+                        <span class="subheading">Architectures de traitement de stream</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="social-media">
+            <div class="social-media-inner container text-center">
+                <ul class="list-inline">
+                    <!---
+                    <li class="twitter-follow">
+                        <a class="github-button" href="https://github.com/boontadata" aria-label="Follow @boontadata on GitHub">Follow @boontadata</a>
+                    </li>--><!--//twitter-follow-->
+                    <li class="github-watch">
+                        <a class="github-button" href="https://github.com/boontadata/boontadata-streams" data-icon="octicon-eye" data-count-href="/boontadata/boontadata-streams/watchers" data-count-api="/repos/boontadata/boontadata-streams#subscribers_count" data-count-aria-label="# watchers on GitHub" aria-label="Watch boontadata/boontadata-streams on GitHub">Watch</a>
+                    </li>
+                    <li class="twitter-tweet">
+                        <a href="https://twitter.com/boontadata" class="twitter-follow-button" data-show-count="false">Follow @boontadata</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </li><!--//twitter-tweet-->
+                </ul>
+            </div>
+        </div>
+    </header>
+  <div class="container">
+      <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+                
+  
+  <div class="post-preview">
+    
+      <h2 id="postToScroll" class="post-title">Flink</h2>
+    
+      <p>Ici nous allons utiliser un autre moteur de traitement des flux de données open source : Apache Flink. A l'origine de ce framework, l'idée selon laquelle il est possible de considérer un traitement batch comme un traitement sur un flux de données fini. Dans ce cadre, pourquoi ne pas traiter de manière identique les flux et les batches ? Bon nombre d'applications telles que les analyses en temps réel,  le traitement des données historiques (batch), les algorithmes itératifs (machine learning) peuvent ainsi être exécutées comme un pipeline de transformations sur un flux de données.</p>
+<p>Flink possède une vaste panoplie de fonctionnalités permettant de répondre aux spécificités de l'analyse "quasi" temps réel en mode distribué sur des flux de données. Parmi lesquelles :</p>
+<ul>
+<li>La capacité de gérer des données aussi bien en mode streaming qu'en mode batch : un dataset étant considéré comme un flux de données fini, les mêmes API pourront être utilisées dans les 2 cas,</li>
+<li>La gestion des cas de retard de la donnée ou encore de donnée non ordonnées, que nous détaillerons plus en détails par la suite,</li>
+<li>La tolérance aux pannes et la restauration de la donnée si un problème survient,</li>
+<li>Une grande scalabilité : flink peut être déployé sur des milliers de noeuds tout en conservant des caractéristiques de performances très élevées,</li>
+<li>Une API en Scala/Java et python en beta, </li>
+<li>Un vaste écosystème donnant accès aux applications de machine learning, de graphe...</li>
+</ul>
+<p>Flink se caractérise aussi par des choix d'architecture très originaux comme par exemple la gestion de la mémoire. Il alloue une très large plage de mémoire dans la JVM, et va ensuite gérer lui  même les allocations à l'intérieur de celle-ci. Cette approche a pour bénéfice de limiter les impacts du "Garbage Collector" et donc d'avoir des traitements beaucoup plus stables dans le temps.</p>
+<h3>Principe de fonctionnement</h3>
+<p>Concrètement, Flink permet à l'utilisateur d'effectuer des transformations sur des données depuis une source.
+L'utilisateur dispose ensuite de cette donnée processée grâce à un "data Sink".</p>
+<p><img src="../static/img/flink/flink-1.png" alt="Flink-1"></p>
+<h3>Event Time, processing, ingestion time et Watermarks:</h3>
+<p>Il est intéressant de se pencher sur la gestion et l'utilisation du temps dans le cadre du traitement de la donnée en environnement streaming. Flink répond à cela en permettant l'utilisation  de différents modes:</p>
+<ul>
+<li>Processing Time: pour une opération en cours,  il correspond à l'heure de la machine. Chaque opération se basera sur l'heure de la machine pour effectuer ses actions. </li>
+<li>Event time: il correspond au moment de la création de la donnée et est souvent présent sous la forme d'un timestamp. L'event time est inclu dans la donnée elle même.</li>
+<li>Ingestion time: ce temps correspond au moment où la donnée entre dans Flink.   </li>
+</ul>
+<p><img src="../static/img/flink/flink-4.png" alt="Flink-4"></p>
+<p>Maintenant que nous avons évoqué ces différentes notions pour prendre en compte une fenêtre de temps, apparaît un problème: comment gérer les messages qui arrivent "en retard" ? En effet, si l'horloge interne d'une machine peut être utilisée lorsqu'il s'agit d'un processing time, on ne peut l'utiliser dans des cas d'ingestion time ou encore d'event time. <br/>
+Le principe du <strong>Watermark</strong> constitue la solution à ce problème dans Flink : il permet d'inclure la notion de  temps passé dans un stream. 
+Un watermark est tout simplement un timestamp, c'est un mécanisme de contrôle intégré au flux lui-même . Lorsqu'une action reçoit un watermark dans Flink, ce dernier comprend automatiquement qu'il ne recevra pas d'évènement plus vieux que ce timestamp.<br>
+<img src="../static/img/flink/flink-5.png" alt="Watermark"></p>
+<p>Exemple: Je définis une fenêtre de temps égale à  10 secondes et un watermark current time - 5 seconds. Les traitements seront alors déclenchés avec un délai de 5 secondes.</p>
+<p><img src="../static/img/flink/flink-7.png" alt="Watermark-2"></p>
+<h3>Notion de Parallèlisme:</h3>
+<p>Flink permet également de gérer la notion de parallèlisme: chaque opération peut être divisée en plusieurs tâches qui tournent en parallèle (ces tâches peuvent être distribuées sur un ou plusieurs noeuds d'un cluster). 
+<img src="../static/img/flink/flink-3.png" alt="Parallèlisme"></p>
+<h3>Tolérance à la panne:</h3>
+<p>Que faire en cas d'incident dans le flux stream? Flink se devait de répondre à cette problématique en mettant en place un système permettant de revenir en arrière en cas d'erreur.<br>
+Ce mécanisme se nomme checkpoint. Concrètement, ces derniers fonctionnent comme des images (snapshots) du stream de données. En cas d'erreur, le système pourra revenir au dernier checkpoint avant l'incident.</p>
+<p>Remarque : Les savepoints dans Flink se basent sur le mécanisme des checkpoints afin d'écrire les métadonnées du checkpoint dans un fichier système. De ce fait, il est possible de réaliser des mises-à-jour de notre programme Flink sans interruption du système. 
+<img src="../static/img/flink/flink-6.png" alt="Checkpoint"></p>
+<h2>Flink au coeur de Boontadata:</h2>
+<p>L'architecture utilisée repose sur notre plateforme générique boontadata.
+Elle est constituée des éléments suivants :</p>
+<ul>
+<li>Simulateur IOT permettant de créer des flux de messages</li>
+<li>Système de messagerie distribué Kafka basé sur le principe du "publisher" / "Subscriber"</li>
+<li>Base de donnée Cassandra pour le stockage des données et résultats</li>
+<li>Service de traitement des flux : Flink dans le cas de ce blog post</li>
+<li>Module de comparaison pour évaluer l'impact et la performance du module de traitement</li>
+</ul>
+<p>Tous les éléments de la plateforme boontada sont créés dans des containers distincts de manière à apporter un maximum de flexibilité.</p>
+<p><img src="../static/img/flink/flink-2.png" alt="Flink-2"></p>
+<p>Le schéma ci-dessus représente le workflow de notre plateforme.
+Les données proviennent d’un IOT et sont envoyées dans un broker Kafka. Les données sources sont également agrégées sur une fenêtre de temps par la simulateur IOT et sauvegardées dans la base Cassandra pour servir de référence.
+La brique Kafka sert de source de données à Flink qui représente le service de traitement à évaluer.
+Flink procède au traitement des streams par création de datasets.
+Ces datasets sont ensuite stockés dans la base de données cassandra (le sink pour Flink).
+Le module de comparaison récupère les résultats dans Cassandra et permet d'évaluer les latences induites par le traitement Flink.</p>
+<p>Afin de connaître la procédure d’installation, n’hésitez pas à aller sur le lien <a href="https://github.com/boontadata/boontadata-streams/blob/master/doc/procedure_install_running_scenarios.md">suivant</a>.</p>
+<p>Ayant déjà traité le fonctionnement de notre environnement et architecture boontadata dans un blog précédent (voir l'article spark streaming cette série de blog boontadata),   nous détaillerons ici le code correspondant au nouveau scénario Flink.</p>
+<hr>
+<h2>Code:</h2>
+<h3>StreamExecutionEnvironment et récupération des messages Kafka</h3><p>Pour Flink, le code est écrit en java (StreamingJob.java). Les principaux éléments du code sont les suivants :</p>
+<p><ul></p>
+<p><li> Définition d'un environnement  "env"  de type "StreamExecutionEnvrinoment", prenant en compte le délai entre la création de checkpoint (5000 msecs)  et le parallisme à 2 (2 containers docker en tant que flink workers):</li><br/></p>
+<script src="https://gist.github.com/BastienBP/91afdce0b99f1a7e01fa598a1eb6fe20.js"></script>
+
+<li> Comme nous l'avons évoqué précédemment, Flink est à même de gérer le Processing Time, l'Event Time et l'Ingestion Time c'est pourquoi nous avons préparé un scénario pour chacun de ces cas (voir le fichier "runscenario.sh" qui peut prendre 3 arguments: flink1: Processing Time, flink2: Event Time, flink3: Ingestion Time) :</li><br/>
+
+<script src="https://gist.github.com/BastienBP/485de1764496f4c617453f9af3dc2ceb.js"></script><p><li>Les données sont ensuite récupérées depuis notre topic Kafka. On assigne un timestamp et un watermark grâce à la méthode assignTimesstampsAndWatermarks de la class DataStream (librairie: org.apache.flink.streaming.api.datastream.DataStream):</li><br/></p>
+<script src="https://gist.github.com/BastienBP/ff0ea6b6f57d38c444e2271330888f43.js"></script>
+
+
+<li>Comme vous avez pu le remarquer dans le code précédent, on instancie la classe BoundedOutOfOrdernessGenerator au moment de l'appel de la fonction "assignTimestampsAndWatermarks".</li>
+Cette classe implémente l'interface "AssignerWithPeriodicWatermarks<T>". <br/>
+On décide de fixer le délai maximal de retard de l'élément à 1 seconde: si un élément arrive dans ce laps de temps, il est attribué à la fenêtre précédente sinon, on le supprime.<br/>
+De même, la latence maximale liée au processing time est fixée à 6 secondes. <br/>
+Cette classe retourne deux éléments:  un TimeStamp et un watermark<br/>
+
+<script src="https://gist.github.com/BastienBP/d74d8df0be2f03b630a6d842a3f2e4d0.js"></script><p><li>Après déduplication et agrégation (somme des mesures) sur une "window_time" de 5 secondes, les données sont envoyées dans cassandra: </li><br/></p>
+<p><script src="https://gist.github.com/BastienBP/0794e111c8a00947b6e30a0e42413ef8.js"></script>
+<br/></p>
+<h3>Résultats:</h3>
+<p>Nous obtenons ainsi 3 résultats selon qu'il s'agisse du traitement par Processing Time, Event Time ou Ingestion Time: <br/></p>
+<ul>
+<li><strong>PROCESSING TIME:</strong></li>
+</ul>
+<p>Comparing ingest device and downstream for m1_sum<br>
+23 exceptions out of 23</p>
+<p><img src="../static/img/flink/flink1_results.png" alt="ProcessingTime"></p>
+<ul>
+<li><strong>EVENT TIME:</strong>  </li>
+</ul>
+<p>Comparing ingest device and downstream for m1_sum<br>
+1 exceptions out of 17</p>
+<p><img src="../static/img/flink/flink2_results.png" alt="EventTime"></p>
+<ul>
+<li><strong>INGESTION TIME:</strong>  </li>
+</ul>
+<p>Comparing ingest device and downstream for m1_sum<br>
+1 exceptions out of 17</p>
+<p><img src="../static/img/flink/flink3_results.png" alt="IngestionTime"></p>
+<hr>
+<p>Ces résultats permettent de mettre en évidence les différences de traitements suivant le type de temps qui est mesuré. Les calculs reposant sur l'event time (ou l'ingest time) sont généralement à privilégier quand le moteur de calcul le permet.</p>
+
+      <p class="post-meta">
+          <br>
+          Écrit par
+          
+          Bastien Brunod
+          
+          le 2017-05-04
+          
+<!--            <span class="post-share"><a href="https://twitter.com/share" class="twitter-share-button" lang="fr" data-text="Flink" data-url="">Tweet</a></span>
+-->       
+      </p>
+  </div>
+<hr>
+
+
+  <div class="comments">
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() { this.page.identifier = "/flink"; };
+  (function() {
+    var d = document, s = d.createElement('script');
+    s.src = '//boontadatablog.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript"
+    rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+          </div>
+      </div>
+  </div>
+  <footer>
+  </footer>
+  <script type="text/javascript" src="../static/vendor/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="../static/vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../static/js/main.js"></script>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  <script src="https://buttons.github.io/buttons.js"></script>
+  <img src="http://tracker.affini-tech.net/pixel.gif"/>
+</body>
